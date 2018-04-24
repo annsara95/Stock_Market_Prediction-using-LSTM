@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+</head>
+<body>
+
+<h2>Prediction Table</h2>      
+        <table border = 1>
+	<tr>
+    		<th>Models</th>
+    		<th>Prediction</th>
+		<th>Suggestion</th>
+  	</tr>
+         {% for key, value in result.items() %}
+         
+	              <tr>
+               <th> {{ key }} </th>
+               <td> {{ value }} </td>
+                <td> Sugestions please  </td>
+            </tr>
+            
+         {% endfor %}
+      </table>
+      
+   </body>
+</html>

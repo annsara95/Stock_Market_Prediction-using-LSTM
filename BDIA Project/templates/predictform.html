@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <title>Stock Price Prediction</title>
+</head>
+<body>
+
+<!-- The form for user's input for variables-->
+
+<div class="container">
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#prediction">Prediction Form</a></li>
+        <li><a data-toggle="tab" href="#upload" >Upload csv</a></li>
+    </ul>
+
+    <div class="tab-content">
+
+        <!-- first pane -->
+        <div class="tab-pane fade in active" id="prediction">
+
+            <div ng-app="myApp"  ng-controller="myController">
+                <form name="myForm" ng-submit="submitMyForm()">
+
+                    <div class="form-group">
+                        <label for="param1">Close Price</label>
+		  <input type="number" name="param1" min="0" max="1000" step ="any" id="param1" ng-model="fields.param1"  placeholder="Enter something" class="form-control" required>
+                    </div>
+
+		 <div class="form-group">
+                        <label for="param2">High</label>
+ 		<input type="number" name="param2" min="0" max="1000" step ="any" id="param2" ng-model="fields.param2"  placeholder="Enter something" class="form-control" required>
+                    </div>
+
+		 <div class="form-group">
+                        <label for="param3">Low</label>
+		  <input type="number" name="param3" min="0" max="1000" step ="any" id="param3" ng-model="fields.param3"  placeholder="Enter something" class="form-control" required>
+                    </div>
+		
+		<div class="form-group">
+		<label for="param4">Volume</label>
+		  <input type="number" name="param4" min="0" max="1000" step ="any" id="param4" ng-model="fields.param4"  placeholder="Enter something" class="form-control" required>
+		</div>
+
+		<div class="form-group">
+                        <label for="param5">Previous Day Open Price</label>
+		  <input type="number" name="param5" min="0" max="1000" step ="any" id="param5" ng-model="fields.param5"  placeholder="Enter something" class="form-control" required>		                      
+		</div>
+
+                    <button data-ng-click="submit(helpForm)" class="btn btn-default">Submit</button>
+
+                    <p>Prediction : <span ng-bind="content"></span></p>
+		
+                </form>
+            </div>
+
+        </div>
+
+        <!-- second pane -->
+        <div class="tab-pane fade" id="upload">
+
+            <form action = "/uploader" method = "POST" enctype = "multipart/form-data">
+                <input type = "file" name = "file" />
+                <input type = "submit"/>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- angular functions-->
+<script>
+
+    var app = angular.module('myApp', []);
+
+    app.controller('myController', ['$scope','$http', function($scope, $http) {
+        
+        $scope.days = ["Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday","Sunday"];
+        $scope.ldas = ["0","1","2","3","4"];
+        $scope.submitMyForm = function() {
+
+            <!-- request to be sent to the server -->
+           $http({
+                method: 'POST',
+                url: '/predict',
+                data: {
+                    param1: $scope.fields.param1,
+                    param2: $scope.fields.param2,
+	         param3: $scope.fields.param3,
+	         param4: $scope.fields.param4,
+	         param5: $scope.fields.param5,
+	        
+                }
+            }).then(function(response) {
+                $scope.content = response.data;
+                $scope.statuscode = response.status;
+                $scope.statustext = response.statusText;    
+
+                $scope.fields.param1 = "";
+                $scope.fields.param2 = "";
+	     $scope.fields.param3 = "";
+                $scope.fields.param4 = "";
+	     $scope.fields.param5 = "";
+	     
+            });  
+        }
+    }]);
+</script>
+
+
+</body>
+</html>
